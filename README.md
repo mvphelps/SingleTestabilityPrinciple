@@ -47,7 +47,7 @@ Our example also records the user input and results, presumably to direct future
 
 Test Sample: [UsageLoggerTests](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/Tests/UsageLoggerTests.cs). This test validates that opaque dependency did what it should - preferably by using an alternate means.
 
-Unit Sample: [UsageLogger](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/MathApp/UsageLogger.cs)
+Unit Sample: [UsageLogger](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/MathApp/UsageLogger.cs). This class simulates an opaque dependency by writing to the file system.
 
 
 ## Collaboration
@@ -70,4 +70,4 @@ Our example code uses a presenter pattern to coordinate the user interaction wit
 
 Test Sample: [PresenterTests](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/Tests/PresenterTests.cs). This test fixture sets up mock objects for all of the dependencies, then creates the presenter, sending in all of the collaborators via the constructor. Note specifically the AddsAndLogsWhenBothAreNumbers test. It sets up the calculator with a non-sensical behavior - that adding 1 and 38 results in 6. This is intentional - since a real calculator isn't being used, it really doesn't matter what the contents of parameters or return values are - just that the proper items are passed around to the right places. For example, it verifies that the non-sensical 6 is later converted to a string an sent to the view. Normally I will use a realistic example - if this were production code I would likely have actually used 39. I used 6 here to make the point clearer.
 
-Unit Sample: [Presenter](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/MathApp/Presenter.cs). Note that all of the conditional statements are only concerned with whether and how to interact further with another collaborator. The are not calculations, they are for determining behavior.
+Unit Sample: [Presenter](https://github.com/mvphelps/SingleTestabilityPrinciple/blob/master/MathApp/Presenter.cs). Note that all of the conditional statements are only concerned with whether and how to interact further with another collaborator. These are not calculations, they are for determining behavior.
