@@ -1,9 +1,12 @@
-﻿namespace MathApp
+﻿using System;
+using System.Xml.Schema;
+
+namespace MathApp
 {
     public interface IView
     {
         void Warn(string message);
-        string RequestNumber();
+        IUserInput RequestNumber();
         void ShowResult(string result);
         void Quit();
     }
@@ -27,38 +30,39 @@
 
         public void Run()
         {
-            if (TryParseAndLog(GetNumber(), out var numberOne))
+            var numberOne = _view.RequestNumber();
+            if (BadInputOrQuit(numberOne))
             {
-                if (TryParseAndLog(GetNumber(), out var numberTwo))
-                {
-                    var result = _calculator.Add(numberOne, numberTwo);
-                    _usageLogger.RecordSuccess(numberOne, numberTwo, result);
-                    _view.ShowResult(result.ToString());
-                }
+                return;
             }
+            var numberTwo = _view.RequestNumber();
+            if (BadInputOrQuit(numberTwo))
+            {
+                return;
+            }
+
+            var addend1 = numberOne.Number;
+            var addend2 = numberTwo.Number;
+            var result = _calculator.Add(addend1, addend2);
+            _usageLogger.RecordSuccess(addend1, addend2, result);
+            _view.ShowResult(result.ToString());
         }
 
-        private bool TryParseAndLog(string userString, out decimal asDecimal)
+        private bool BadInputOrQuit(IUserInput numberOne)
         {
-            if (decimal.TryParse(userString, out asDecimal))
-            {
-                return true;
-            }
-            _view.Warn($"That isn't a number");
-            _usageLogger.RecordError(userString);
-            return false;
-        }
-
-        private string GetNumber()
-        {
-            var userString = _view.RequestNumber();
-            if ("q".Equals(userString))
+            if (numberOne.IsQuit)
             {
                 _view.Quit();
-                return null;
+                return true;
             }
 
-            return userString;
+            if (numberOne.IsBad)
+            {
+                _view.Warn($"That isn't a number");
+                _usageLogger.RecordError(numberOne.RawValue);
+                return true;
+            }
+            return false;
         }
     }
 }

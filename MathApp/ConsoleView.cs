@@ -11,11 +11,11 @@ namespace MathApp
             Console.WriteLine("!!!!!!!!!");
         }
 
-        public string RequestNumber()
+        public IUserInput RequestNumber()
         {
             Console.WriteLine("Please enter a number and press <Enter>:");
             Console.Write("\t");
-            return Console.ReadLine();
+            return new UserInput(Console.ReadLine());
         }
 
         public void ShowResult(string result)
